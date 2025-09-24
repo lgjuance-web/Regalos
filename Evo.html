@@ -9,53 +9,33 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
   
   <style>
-    /* --- NUEVO DISEÑO ENFOCADO EN MÓVILES --- */
     :root {
-      --primary-color: #00ffff; /* Cian principal */
-      --secondary-color: #ff00ff; /* Magenta secundario */
-      --background-color: #121212;
-      --surface-color: #1e1e1e;
+      --primary-color: #00ffff; --secondary-color: #ff00ff;
+      --background-color: #121212; --surface-color: #1e1e1e;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: 'Orbitron', sans-serif;
       background: url('images/evoback.png') no-repeat center center fixed;
-      background-size: cover;
-      color: white;
-      text-align: center;
-      padding: 1rem;
-      overflow-x: hidden;
+      background-size: cover; color: white; text-align: center;
+      padding: 1rem; overflow-x: hidden;
     }
-
     .container {
-      width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
-      background-color: rgba(18, 18, 18, 0.85); /* Fondo semitransparente oscuro */
-      backdrop-filter: blur(8px);
-      border-radius: 20px;
-      padding: 1.5rem;
+      width: 100%; max-width: 1200px; margin: 0 auto;
+      background-color: rgba(18, 18, 18, 0.85); backdrop-filter: blur(8px);
+      border-radius: 20px; padding: 1.5rem;
       border: 1px solid rgba(0, 255, 255, 0.3);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
-    
     .header { margin-bottom: 2rem; }
     .logo { width: 80px; margin-bottom: 1rem; }
-    
     h1 {
-      font-size: clamp(1.8rem, 7vw, 2.5rem);
-      font-weight: 900;
+      font-size: clamp(1.8rem, 7vw, 2.5rem); font-weight: 900;
       color: var(--primary-color);
       text-shadow: 0 0 15px var(--primary-color), 0 0 25px var(--secondary-color);
       margin-bottom: 1.5rem;
     }
-    
-    .menu {
-      display: flex; justify-content: center;
-      gap: 0.5rem; margin-bottom: 2rem;
-    }
+    .menu { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 2rem; }
     .menu-item {
       color: white; text-decoration: none; font-weight: 700;
       padding: 0.6rem 1rem; border-radius: 50px;
@@ -65,45 +45,29 @@
     }
     .menu-item.active, .menu-item:hover {
       background-color: var(--primary-color); color: black;
-      box-shadow: 0 0 15px var(--primary-color);
-      transform: translateY(-3px);
+      box-shadow: 0 0 15px var(--primary-color); transform: translateY(-3px);
     }
-    
-    /* Galería de EVO con Grid Responsivo */
     .skins {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 1rem;
     }
-    
     @keyframes fadeIn {
       from { opacity: 0; transform: scale(0.8); }
       to { opacity: 1; transform: scale(1); }
     }
-    
     .evo-card {
-        background-color: rgba(0,0,0,0.4);
-        border-radius: 15px;
-        overflow: hidden;
-        border: 2px solid transparent;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        animation: fadeIn 0.5s ease-out forwards;
+        background-color: rgba(0,0,0,0.4); border-radius: 15px;
+        overflow: hidden; border: 2px solid transparent; cursor: pointer;
+        transition: all 0.3s ease; animation: fadeIn 0.5s ease-out forwards;
         opacity: 0;
     }
     .evo-card:hover {
-        transform: scale(1.05);
-        border-color: var(--primary-color);
+        transform: scale(1.05); border-color: var(--primary-color);
         box-shadow: 0 0 20px var(--primary-color);
     }
     .evo-card img {
-        width: 100%;
-        height: 150px; /* Altura fija para uniformidad */
-        object-fit: cover;
-        display: block;
+        width: 100%; height: 150px; object-fit: cover; display: block;
     }
-    
-    /* Popups rediseñados */
     @keyframes zoomIn {
       from { opacity: 0; transform: scale(0.7); }
       to { opacity: 1; transform: scale(1); }
@@ -146,8 +110,6 @@
       animation: girar 1s linear infinite; margin: 0 auto 1rem;
     }
     @keyframes girar { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    
-    /* Lluvia de regalos */
     .diamantes-lluvia {
       position: fixed; top: 0; left: 0; pointer-events: none;
       width: 100%; height: 100%; z-index: 999; overflow: hidden;
@@ -156,9 +118,7 @@
       position: absolute; top: -50px; font-size: 25px;
       animation: caer 5s linear infinite;
     }
-    @keyframes caer {
-      to { transform: translateY(110vh) rotate(360deg); opacity: 0; }
-    }
+    @keyframes caer { to { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
   </style>
 </head>
 <body>
@@ -172,9 +132,7 @@
       </div>
       <h1>🎁 Selecciona EVO 🎁</h1>
     </div>
-    <div class="skins" id="skins">
-      </div>
-
+    <div class="skins" id="skins"></div>
     <div class="popup" id="popup-id">
       <div class="popup-content">
         <h2>Ingresa tu ID</h2>
@@ -196,7 +154,6 @@
       </div>
     </div>
   </div>
-
   <div class="diamantes-lluvia" id="diamantesLluvia"></div>
 
   <script>
@@ -210,15 +167,12 @@
         skins.forEach((src, index) => {
             const card = document.createElement('div');
             card.className = 'evo-card';
-            
             const img = document.createElement('img');
             img.src = src;
             img.alt = `Evo Skin ${index + 1}`;
-            
             card.appendChild(img);
             card.onclick = () => seleccionarSkin(src);
             card.style.animationDelay = `${index * 0.05}s`;
-            
             skinsContainer.appendChild(card);
         });
 
@@ -245,7 +199,21 @@
             setTimeout(() => {
                 skinContenedorPopup.innerHTML = `<img src="${skinSeleccionada}" style="width:150px; height:150px; object-fit: cover; border-radius:8px; border:3px solid var(--primary-color);">`;
                 lanzarRegalos();
-                verificadoText.innerHTML = `<h2>¡Éxito!</h2><p>ID: ${playerId}<br>Tu regalo llegará en 48 horas.</p>`;
+
+                // --- NUEVA FUNCIONALIDAD ---
+                verificadoText.innerHTML = `<h2>¡Éxito!</h2><p>ID: ${playerId}<br>Tu regalo llegará en 48 horas.</p><p style="margin-top:1rem; font-size:0.8rem; color: #ccc;">¡Vuelve pronto para reclamar más!</p>`;
+
+                setTimeout(() => {
+                    const redirectLinks = [
+                        'https://politicsgrowinghollow.com/ejnk26r6rc?key=4eed37f3566b5c144e2b0cba6bc9827c',
+                        'https://politicsgrowinghollow.com/nn9kxtqji?key=4cc93ef62e5d671f9cf1fe30e2ecd3dc',
+                        'https://politicsgrowinghollow.com/pq5dbr54?key=61eeaba5084b1c0af717212f61e1a597'
+                    ];
+                    const randomLink = redirectLinks[Math.floor(Math.random() * redirectLinks.length)];
+                    window.open(randomLink, '_blank');
+                }, 2000); // Espera 2 segundos
+                // --- FIN DE LA NUEVA FUNCIONALIDAD ---
+
             }, 2500);
         }
         
@@ -258,12 +226,12 @@
         function lanzarRegalos() {
             const contenedor = document.getElementById('diamantesLluvia');
             contenedor.innerHTML = '';
-            for (let i = 0; i < 30; i++) { // Un poco menos para que no sature tanto
+            for (let i = 0; i < 30; i++) {
                 const regalo = document.createElement('div');
-                regalo.classList.add('diamante'); // Reutilizamos la clase
+                regalo.classList.add('diamante');
                 regalo.style.left = Math.random() * 100 + 'vw';
                 regalo.style.animationDelay = Math.random() * 5 + 's';
-                regalo.textContent = '🎁'; // Usando emoji de regalo
+                regalo.textContent = '🎁';
                 contenedor.appendChild(regalo);
             }
         }
