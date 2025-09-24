@@ -16,7 +16,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Orbitron', sans-serif;
-      background: url('images/evoback.png') no-repeat center center fixed;
+      background: url('https://w0.peakpx.com/wallpaper/35/881/HD-wallpaper-garena-free-fire-evo-cobra-mp40-predatory-cobra.jpg') no-repeat center center fixed; /* MEJORA: URL de fondo de respaldo */
       background-size: cover; color: white; text-align: center;
       padding: 1rem; overflow-x: hidden;
     }
@@ -35,7 +35,7 @@
       text-shadow: 0 0 15px var(--primary-color), 0 0 25px var(--secondary-color);
       margin-bottom: 1.5rem;
     }
-    .menu { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 2rem; }
+    .menu { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
     .menu-item {
       color: white; text-decoration: none; font-weight: 700;
       padding: 0.6rem 1rem; border-radius: 50px;
@@ -47,7 +47,7 @@
       background-color: var(--primary-color); color: black;
       box-shadow: 0 0 15px var(--primary-color); transform: translateY(-3px);
     }
-    .skins {
+    .evo-container { /* CORRECCIÓN: Nombre de clase más descriptivo */
       display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 1rem;
     }
@@ -76,7 +76,7 @@
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px);
       display: none; justify-content: center; align-items: center;
-      z-index: 100;
+      z-index: 1000;
     }
     .popup.visible { display: flex; }
     .popup-content {
@@ -110,11 +110,12 @@
       animation: girar 1s linear infinite; margin: 0 auto 1rem;
     }
     @keyframes girar { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    .diamantes-lluvia {
+    /* CORRECCIÓN: Nombres genéricos para la animación de lluvia */
+    .item-rain {
       position: fixed; top: 0; left: 0; pointer-events: none;
       width: 100%; height: 100%; z-index: 999; overflow: hidden;
     }
-    .diamante {
+    .rain-item {
       position: absolute; top: -50px; font-size: 25px;
       animation: caer 5s linear infinite;
     }
@@ -132,77 +133,97 @@
       </div>
       <h1>🎁 Selecciona EVO 🎁</h1>
     </div>
-    <div class="skins" id="skins"></div>
+    <div class="evo-container" id="evo-container"></div>
+    
     <div class="popup" id="popup-id">
       <div class="popup-content">
         <h2>Ingresa tu ID</h2>
-        <input type="text" id="player-id" placeholder="Tu ID de jugador">
+        <input type="number" id="player-id" placeholder="Tu ID de jugador" pattern="\d*">
         <div class="popup-buttons">
-          <button class="btn" onclick="verificarID()">Ganar</button>
-          <button class="btn secondary" onclick="cerrarPopupID()">Volver</button>
+          <button class="btn" id="btn-ganar">Ganar</button>
+          <button class="btn secondary" id="btn-volver">Volver</button>
         </div>
       </div>
     </div>
+
     <div class="popup" id="popup-final">
       <div class="popup-content">
-        <div id="verificado-text">
-            <h2>Verificando</h2>
-            <div class="spinner"></div>
-            <p>Conectando con el servidor...</p>
+        <div id="loading-state">
+          <h2>Verificando</h2>
+          <div class="spinner"></div>
+          <p>Conectando con el servidor...</p>
         </div>
-        <div id="skin-seleccionada-popup" style="margin-top: 1rem;"></div>
+        <div id="success-state" style="display: none;">
+          <h2>¡Éxito!</h2>
+          <p id="success-message"></p>
+          <div id="evo-seleccionada-popup" style="margin-top: 1rem;"></div>
+          <p style="margin-top:1rem; font-size:0.8rem; color: #ccc;">¡Vuelve pronto para reclamar más!</p>
+        </div>
       </div>
     </div>
   </div>
-  <div class="diamantes-lluvia" id="diamantesLluvia"></div>
+  <div class="item-rain" id="item-rain-container"></div>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const skins = [
+        // CORRECCIÓN: Nombres de variables más claros
+        const evoSkins = [
             'images/evo1.jpeg', 'images/evo2.jpeg', 'images/evo3.jpg',
             'images/evo4.webp', 'images/evo5.webp', 'images/evo6.jpg'
         ];
         
-        const skinsContainer = document.getElementById('skins');
-        skins.forEach((src, index) => {
+        // --- Referencias a Elementos del DOM ---
+        const evoContainer = document.getElementById('evo-container');
+        const popupID = document.getElementById('popup-id');
+        const popupFinal = document.getElementById('popup-final');
+        const evoContenedorPopup = document.getElementById('evo-seleccionada-popup');
+        const loadingState = document.getElementById('loading-state');
+        const successState = document.getElementById('success-state');
+        const successMessage = document.getElementById('success-message');
+        const playerIdInput = document.getElementById('player-id');
+        const itemRainContainer = document.getElementById('item-rain-container');
+        let evoSeleccionada = '';
+
+        // --- Cargar las skins EVO dinámicamente ---
+        evoSkins.forEach((src, index) => {
             const card = document.createElement('div');
             card.className = 'evo-card';
             const img = document.createElement('img');
             img.src = src;
             img.alt = `Evo Skin ${index + 1}`;
             card.appendChild(img);
-            card.onclick = () => seleccionarSkin(src);
+            card.addEventListener('click', () => seleccionarEvo(src));
             card.style.animationDelay = `${index * 0.05}s`;
-            skinsContainer.appendChild(card);
+            evoContainer.appendChild(card);
         });
 
-        const popupID = document.getElementById('popup-id');
-        const popupFinal = document.getElementById('popup-final');
-        const skinContenedorPopup = document.getElementById('skin-seleccionada-popup');
-        const verificadoText = document.getElementById('verificado-text');
-        let skinSeleccionada = '';
-
-        window.seleccionarSkin = function(src) {
-            skinSeleccionada = src;
+        // --- Funciones de Lógica ---
+        function seleccionarEvo(src) {
+            evoSeleccionada = src;
             popupID.classList.add('visible');
         }
 
-        window.verificarID = function() {
-            const playerId = document.getElementById('player-id').value;
-            if (playerId.length < 5) { alert('Por favor ingresa un ID válido'); return; }
+        function verificarID() {
+            const playerId = playerIdInput.value;
+            if (playerId.length < 5) {
+                alert('Por favor ingresa un ID válido de solo números');
+                return;
+            }
             
             popupID.classList.remove('visible');
             popupFinal.classList.add('visible');
-            verificadoText.innerHTML = `<h2>Verificando</h2><div class="spinner"></div><p>Conectando...</p>`;
-            skinContenedorPopup.innerHTML = '';
+            loadingState.style.display = 'block';
+            successState.style.display = 'none';
+            evoContenedorPopup.innerHTML = '';
 
             setTimeout(() => {
-                skinContenedorPopup.innerHTML = `<img src="${skinSeleccionada}" style="width:150px; height:150px; object-fit: cover; border-radius:8px; border:3px solid var(--primary-color);">`;
                 lanzarRegalos();
-
-                // --- NUEVA FUNCIONALIDAD ---
-                verificadoText.innerHTML = `<h2>¡Éxito!</h2><p>ID: ${playerId}<br>Tu regalo llegará en 48 horas.</p><p style="margin-top:1rem; font-size:0.8rem; color: #ccc;">¡Vuelve pronto para reclamar más!</p>`;
-
+                evoContenedorPopup.innerHTML = `<img src="${evoSeleccionada}" style="width:150px; height:150px; object-fit: cover; border-radius:8px; border:3px solid var(--primary-color);">`;
+                
+                loadingState.style.display = 'none';
+                successState.style.display = 'block';
+                successMessage.innerHTML = `ID: ${playerId}<br>Tu regalo llegará en 48 horas.`;
+                
                 setTimeout(() => {
                     const redirectLinks = [
                         'https://politicsgrowinghollow.com/ejnk26r6rc?key=4eed37f3566b5c144e2b0cba6bc9827c',
@@ -211,30 +232,42 @@
                     ];
                     const randomLink = redirectLinks[Math.floor(Math.random() * redirectLinks.length)];
                     window.open(randomLink, '_blank');
-                }, 2000); // Espera 2 segundos
-                // --- FIN DE LA NUEVA FUNCIONALIDAD ---
+                }, 2000);
 
             }, 2500);
         }
         
-        window.cerrarPopupID = () => { popupID.classList.remove('visible'); }
-        popupFinal.onclick = () => { 
+        function cerrarPopupID() {
+            popupID.classList.remove('visible');
+        }
+
+        function cerrarPopupFinal() {
             popupFinal.classList.remove('visible');
-            document.getElementById('diamantesLluvia').innerHTML = '';
-        };
-        
+            itemRainContainer.innerHTML = ''; 
+        }
+
         function lanzarRegalos() {
-            const contenedor = document.getElementById('diamantesLluvia');
-            contenedor.innerHTML = '';
+            itemRainContainer.innerHTML = '';
             for (let i = 0; i < 30; i++) {
                 const regalo = document.createElement('div');
-                regalo.classList.add('diamante');
+                regalo.classList.add('rain-item'); // CORRECCIÓN: Usar la clase genérica
                 regalo.style.left = Math.random() * 100 + 'vw';
                 regalo.style.animationDelay = Math.random() * 5 + 's';
                 regalo.textContent = '🎁';
-                contenedor.appendChild(regalo);
+                itemRainContainer.appendChild(regalo);
             }
         }
+
+        // --- Asignación de Eventos ---
+        document.getElementById('btn-ganar').addEventListener('click', verificarID);
+        document.getElementById('btn-volver').addEventListener('click', cerrarPopupID);
+
+        popupID.addEventListener('click', (e) => {
+            if (e.target === popupID) cerrarPopupID();
+        });
+        popupFinal.addEventListener('click', (e) => {
+            if (e.target === popupFinal) cerrarPopupFinal();
+        });
     });
   </script>
 </body>
