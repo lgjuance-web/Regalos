@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Selector de Skins - Free Fire</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* --- ESTILOS FUSIONADOS --- */
+    body {
+      margin: 0;
+      font-family: 'Orbitron', sans-serif; /* Tu fuente original */
+      background: #000000; /* Tu fondo negro */
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+    }
+    
+    /* 1. Animación de entrada para el título */
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-size: clamp(2rem, 8vw, 3rem); /* Tamaño adaptable */
+      color: #e3e32a; /* Tu color de título */
+      text-shadow: 0 0 10px #e3e32a, 0 0 20px red;
+      margin: 20px 0;
+      animation: fadeInDown 1s ease-out;
+    }
+    
+    /* 2. Menú con tu estilo y efecto hover mejorado */
+    .menu {
+      display: flex;
+      flex-wrap: wrap; /* Para que no se desborde en pantallas pequeñas */
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 25px;
+    }
+
+    .menu-item {
+      color: #e3e32a;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 0.5rem 1rem;
+      border: 2px solid #e3e32a;
+      border-radius: 0.5rem;
+      background-color: rgba(0, 0, 0, 0.6);
+      transition: all 0.3s ease;
+      text-shadow: 1px 1px 2px #000;
+    }
+
+    .menu-item:hover {
+      background-color: #e3e32a;
+      color: #000;
+      text-shadow: none;
+      transform: scale(1.1);
+      box-shadow: 0 0 15px #e3e32a;
+    }
+    
+    /* 3. Contenedor de skins flexible y animado */
+    .skins {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+    }
+    
+    @keyframes bounceIn {
+      from { opacity: 0; transform: scale(0.3); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    
+    .skins img {
+      width: 120px;
+      height: 160px;
+      object-fit: cover;
+      border: 3px solid red;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+      animation: bounceIn 0.8s ease-out forwards;
+      opacity: 0;
+    }
+    
+    .skins img:hover {
+      transform: scale(1.15);
+      border-color: yellow;
+      box-shadow: 0 0 20px yellow;
+    }
+    
+    /* 4. Estilo de la Skin Exclusiva (tu animación 'glow') */
+    .skin-exclusiva {
+      width: 256px !important;
+      height: 144px !important;
+      border-color: gold !important;
+      animation: bounceIn 0.8s ease-out forwards, glow 1.5s infinite alternate;
+    }
+    
+    @keyframes glow {
+      from { box-shadow: 0 0 20px gold, 0 0 30px #ff8f00; }
+      to { box-shadow: 0 0 40px gold, 0 0 50px #ff8f00; }
+    }
+    
+    /* 5. Popup con tu estética y animación de zoom */
+    @keyframes zoomIn {
+      from { transform: scale(0.5); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .popup {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+    
+    .popup.visible {
+        display: flex;
+    }
+
+    .popup-content {
+      background: #000000;
+      padding: 30px;
+      border: 3px solid red;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 0 25px red;
+      width: 90%;
+      max-width: 350px;
+      animation: zoomIn 0.5s ease-out;
+    }
+    
+    /* Resto de tus estilos originales */
+    .logo {
+        width: 100px; /* Tamaño ajustado */
+        margin-bottom: 15px;
+    }
+    .logo-popup {
+        width: 80px;
+        margin-bottom: 15px;
+    }
+    .popup-content input {
+      width: 100%; box-sizing: border-box; padding: 10px; margin: 15px 0; border-radius: 5px;
+      border: 2px solid red; font-size: 1rem; background: black; color: white;
+    }
+    .popup-buttons { display: flex; justify-content: space-around; }
+    .popup-content button {
+      background: red; color: white; border: none; padding: 10px 20px; font-size: 1rem;
+      cursor: pointer; border-radius: 5px; transition: background 0.3s, color 0.3s; margin: 5px;
+    }
+    .popup-content button:hover { background: yellow; color: red; }
+    .spinner {
+      display: inline-block; width: 18px; height: 18px; border: 3px solid #fff;
+      border-top: 3px solid red; border-radius: 50%; animation: girar 1s linear infinite;
+      margin-right: 10px; vertical-align: middle;
+    }
+    @keyframes girar { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="https://brandlogos.net/wp-content/uploads/2020/11/garena-logo-512x512.png" alt="Garena Logo" class="logo">
+      <div class="menu">
+        <a href="index.html" class="menu-item">Skin</a>
+        <a href="Diamantes.html" class="menu-item">Diamantes</a>
+        <a href="Evo.html" class="menu-item">Evo</a>
+      </div>      
+      <h1>Selecciona tu skin favorita</h1>
+    </div>
+    <div class="skins" id="skins">
+      </div>
+
+    <div class="popup" id="popup-id">
+      <div class="popup-content">
+        <img src="https://brandlogos.net/wp-content/uploads/2020/11/garena-logo-512x512.png" alt="Garena Logo" class="logo-popup">
+        <h2>Ingresa tu ID</h2>
+        <input type="text" id="player-id" placeholder="Tu ID de jugador">
+        <div class="popup-buttons">
+          <button onclick="verificarID()">Ganar</button>
+          <button onclick="cerrarPopupID()">Volver</button>
+        </div>
+      </div>
+    </div>
+    <div class="popup" id="popup-final">
+      <div class="popup-content">
+        <h2>Verificado</h2>
+        <p id="verificado-text">...</p>
+        <div id="skin-seleccionada"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const skins = [
+            'images/1.png', 'images/2.png', 'images/3.png', 'images/4.png', 'images/5.png', 'images/6.png',
+            'images/7.png', 'images/skin8.jpg', 'images/skin9.jpg', 'images/skin10.jpg', 'images/skin11.jpg',
+            'images/skin12.jpg', 'images/skin13.jpg', 'images/skin14.jpg', 'images/skin15.jpg', 'images/skin16.jpg',
+            'images/17.png', 'images/18.png', 'images/19.png', 'images/skin20.jpg'
+        ];
+        const skinsContainer = document.getElementById('skins');
+        skins.forEach((src, index) => {
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = `Skin ${index + 1}`;
+            img.onclick = () => seleccionarSkin(src);
+            img.style.animationDelay = `${index * 0.05}s`;
+            if (src.includes('skin20.jpg')) {
+                img.classList.add('skin-exclusiva');
+            }
+            skinsContainer.appendChild(img);
+        });
+
+        const popupID = document.getElementById('popup-id');
+        const popupFinal = document.getElementById('popup-final');
+        const skinContenedor = document.getElementById('skin-seleccionada');
+        const verificadoText = document.getElementById('verificado-text');
+        let skinSeleccionada = '';
+
+        window.seleccionarSkin = function(src) {
+            skinSeleccionada = src;
+            popupID.classList.add('visible');
+        }
+        window.verificarID = function() {
+            const playerId = document.getElementById('player-id').value;
+            if (playerId.length < 5) { alert('Por favor ingresa un ID válido'); return; }
+            popupID.classList.remove('visible');
+            popupFinal.classList.add('visible');
+            verificadoText.innerHTML = `<span class="spinner"></span> Conectando...`;
+            skinContenedor.innerHTML = '';
+            
+            setTimeout(() => {
+                skinContenedor.innerHTML = `<img src="${skinSeleccionada}" style="width:120px; height:160px; border-radius:8px; border:3px solid yellow;">`;
+                const audio = new Audio('audio/skin.wav');
+                audio.play().catch(e => console.error("Error al reproducir audio:", e));
+                setTimeout(() => {
+                    verificadoText.innerText = `ID: ${playerId} Tu regalo llegará en 48 horas.`;
+                }, 1000);
+            }, 1500);
+        }
+        window.cerrarPopupID = () => { popupID.classList.remove('visible'); }
+        popupFinal.onclick = () => { popupFinal.classList.remove('visible'); };
+    });
+  </script>
+</body>
+</html>
