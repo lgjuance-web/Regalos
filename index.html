@@ -6,166 +6,186 @@
   <title>Selector de Skins - Free Fire</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
   
   <style>
-    /* --- ESTILOS FUSIONADOS --- */
-    body {
+    /* --- NUEVO DISEÑO ENFOCADO EN MÓVILES --- */
+    :root {
+      --primary-color: #ffc107; /* Amarillo dorado principal */
+      --secondary-color: #f44336; /* Rojo secundario */
+      --background-color: #121212; /* Negro casi puro */
+      --surface-color: #1e1e1e; /* Color de las superficies */
+    }
+
+    * {
+      box-sizing: border-box;
       margin: 0;
-      font-family: 'Orbitron', sans-serif; /* Tu fuente original */
-      background: #000000; /* Tu fondo negro */
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background-color: var(--background-color);
       color: white;
       text-align: center;
-      padding: 20px;
+      padding: 1rem;
+      overflow-x: hidden;
     }
 
     .container {
       width: 100%;
-      max-width: 900px;
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: var(--surface-color);
+      border-radius: 20px;
+      padding: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
     
-    /* 1. Animación de entrada para el título */
-    @keyframes fadeInDown {
-      from { opacity: 0; transform: translateY(-30px); }
-      to { opacity: 1; transform: translateY(0); }
+    .header {
+      margin-bottom: 2rem;
     }
-
+    
+    .logo {
+      width: 80px;
+      margin-bottom: 1rem;
+    }
+    
     h1 {
-      font-size: clamp(2rem, 8vw, 3rem); /* Tamaño adaptable */
-      color: #e3e32a; /* Tu color de título */
-      text-shadow: 0 0 10px #e3e32a, 0 0 20px red;
-      margin: 20px 0;
-      animation: fadeInDown 1s ease-out;
+      font-size: clamp(1.8rem, 7vw, 2.5rem);
+      font-weight: 900;
+      color: var(--primary-color);
+      text-shadow: 0 0 15px var(--primary-color);
+      margin-bottom: 1.5rem;
     }
     
-    /* 2. Menú con tu estilo y efecto hover mejorado */
     .menu {
       display: flex;
-      flex-wrap: wrap; /* Para que no se desborde en pantallas pequeñas */
       justify-content: center;
-      gap: 1rem;
-      margin-bottom: 25px;
+      gap: 0.5rem; /* Menos espacio en móvil */
+      margin-bottom: 2rem;
     }
 
     .menu-item {
-      color: #e3e32a;
+      color: white;
       text-decoration: none;
-      font-weight: bold;
-      padding: 0.5rem 1rem;
-      border: 2px solid #e3e32a;
-      border-radius: 0.5rem;
-      background-color: rgba(0, 0, 0, 0.6);
+      font-weight: 700;
+      padding: 0.6rem 1rem;
+      border-radius: 50px; /* Botones tipo píldora */
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       transition: all 0.3s ease;
-      text-shadow: 1px 1px 2px #000;
+      font-size: 0.8rem;
     }
 
-    .menu-item:hover {
-      background-color: #e3e32a;
-      color: #000;
-      text-shadow: none;
-      transform: scale(1.1);
-      box-shadow: 0 0 15px #e3e32a;
+    .menu-item.active, .menu-item:hover {
+      background-color: var(--primary-color);
+      color: black;
+      box-shadow: 0 0 15px var(--primary-color);
+      transform: translateY(-3px);
     }
     
-    /* 3. Contenedor de skins flexible y animado */
+    /* Galería de Skins con Grid Responsivo */
     .skins {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px;
+      display: grid;
+      /* Muestra 2 columnas en móvil, auto-ajusta en pantallas más grandes */
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 1rem;
     }
     
-    @keyframes bounceIn {
-      from { opacity: 0; transform: scale(0.3); }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.8); }
       to { opacity: 1; transform: scale(1); }
     }
     
-    .skins img {
-      width: 120px;
-      height: 160px;
-      object-fit: cover;
-      border: 3px solid red;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
-      animation: bounceIn 0.8s ease-out forwards;
-      opacity: 0;
+    .skin-card {
+        background-color: rgba(0,0,0,0.3);
+        border-radius: 15px;
+        overflow: hidden;
+        border: 2px solid transparent;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        animation: fadeIn 0.5s ease-out forwards;
+        opacity: 0;
+    }
+
+    .skin-card:hover {
+        transform: scale(1.05);
+        border-color: var(--primary-color);
+        box-shadow: 0 0 20px var(--primary-color);
     }
     
-    .skins img:hover {
-      transform: scale(1.15);
-      border-color: yellow;
-      box-shadow: 0 0 20px yellow;
+    .skin-card img {
+        width: 100%;
+        height: auto;
+        display: block;
     }
-    
-    /* 4. Estilo de la Skin Exclusiva (tu animación 'glow') */
+
     .skin-exclusiva {
-      width: 256px !important;
-      height: 144px !important;
-      border-color: gold !important;
-      animation: bounceIn 0.8s ease-out forwards, glow 1.5s infinite alternate;
+        /* Ocupa todo el ancho en la cuadrícula */
+        grid-column: 1 / -1;
+        border-color: var(--secondary-color) !important;
+        animation: fadeIn 0.5s ease-out forwards, glow 1.5s infinite alternate;
     }
     
     @keyframes glow {
-      from { box-shadow: 0 0 20px gold, 0 0 30px #ff8f00; }
-      to { box-shadow: 0 0 40px gold, 0 0 50px #ff8f00; }
+      from { box-shadow: 0 0 20px var(--secondary-color); }
+      to { box-shadow: 0 0 40px var(--secondary-color); }
     }
     
-    /* 5. Popup con tu estética y animación de zoom */
+    /* Popups rediseñados */
     @keyframes zoomIn {
-      from { transform: scale(0.5); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
+      from { opacity: 0; transform: scale(0.7); }
+      to { opacity: 1; transform: scale(1); }
     }
 
     .popup {
-      position: fixed; top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.9);
-      display: none;
-      justify-content: center;
-      align-items: center;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(5px);
+      display: none; justify-content: center; align-items: center;
       z-index: 100;
     }
-    
-    .popup.visible {
-        display: flex;
-    }
+    .popup.visible { display: flex; }
 
     .popup-content {
-      background: #000000;
-      padding: 30px;
-      border: 3px solid red;
-      border-radius: 10px;
+      background: var(--surface-color);
+      padding: 2rem;
+      border: 1px solid var(--primary-color);
+      border-radius: 20px;
       text-align: center;
-      box-shadow: 0 0 25px red;
-      width: 90%;
-      max-width: 350px;
-      animation: zoomIn 0.5s ease-out;
+      box-shadow: 0 0 30px var(--primary-color);
+      width: 90%; max-width: 400px;
+      animation: zoomIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     
-    /* Resto de tus estilos originales */
-    .logo {
-        width: 100px; /* Tamaño ajustado */
-        margin-bottom: 15px;
-    }
-    .logo-popup {
-        width: 80px;
-        margin-bottom: 15px;
-    }
+    .popup-content h2 { font-size: 1.5rem; margin-bottom: 1rem; }
     .popup-content input {
-      width: 100%; box-sizing: border-box; padding: 10px; margin: 15px 0; border-radius: 5px;
-      border: 2px solid red; font-size: 1rem; background: black; color: white;
+      width: 100%; padding: 0.8rem; margin: 1rem 0; border-radius: 10px;
+      border: 2px solid var(--primary-color); font-size: 1rem;
+      background: var(--background-color); color: white; text-align: center;
+      font-family: 'Orbitron', sans-serif;
     }
-    .popup-buttons { display: flex; justify-content: space-around; }
-    .popup-content button {
-      background: red; color: white; border: none; padding: 10px 20px; font-size: 1rem;
-      cursor: pointer; border-radius: 5px; transition: background 0.3s, color 0.3s; margin: 5px;
+    
+    /* Botones con gradiente y animación */
+    .btn {
+      color: black; border: none; padding: 0.8rem 1.5rem; font-size: 1rem;
+      cursor: pointer; border-radius: 50px; transition: all 0.3s ease;
+      font-family: 'Orbitron', sans-serif; font-weight: 700;
+      background: var(--primary-color);
+      box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
     }
-    .popup-content button:hover { background: yellow; color: red; }
+    .btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(255, 193, 7, 0.6); }
+    .btn.secondary { background: #666; color: white; box-shadow: none; }
+    .btn.secondary:hover { background: #888; }
+    
+    .popup-buttons { display: flex; justify-content: center; gap: 1rem; }
+    
     .spinner {
-      display: inline-block; width: 18px; height: 18px; border: 3px solid #fff;
-      border-top: 3px solid red; border-radius: 50%; animation: girar 1s linear infinite;
-      margin-right: 10px; vertical-align: middle;
+      display: inline-block; width: 24px; height: 24px; border: 4px solid rgba(255,255,255,0.3);
+      border-top-color: var(--primary-color); border-radius: 50%;
+      animation: girar 1s linear infinite; margin: 0 auto 1rem;
     }
     @keyframes girar { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
   </style>
@@ -175,7 +195,7 @@
     <div class="header">
       <img src="https://brandlogos.net/wp-content/uploads/2020/11/garena-logo-512x512.png" alt="Garena Logo" class="logo">
       <div class="menu">
-        <a href="index.html" class="menu-item">Skin</a>
+        <a href="index.html" class="menu-item active">Skin</a>
         <a href="Diamantes.html" class="menu-item">Diamantes</a>
         <a href="Evo.html" class="menu-item">Evo</a>
       </div>      
@@ -186,20 +206,22 @@
 
     <div class="popup" id="popup-id">
       <div class="popup-content">
-        <img src="https://brandlogos.net/wp-content/uploads/2020/11/garena-logo-512x512.png" alt="Garena Logo" class="logo-popup">
         <h2>Ingresa tu ID</h2>
         <input type="text" id="player-id" placeholder="Tu ID de jugador">
         <div class="popup-buttons">
-          <button onclick="verificarID()">Ganar</button>
-          <button onclick="cerrarPopupID()">Volver</button>
+          <button class="btn" onclick="verificarID()">Ganar</button>
+          <button class="btn secondary" onclick="cerrarPopupID()">Volver</button>
         </div>
       </div>
     </div>
     <div class="popup" id="popup-final">
       <div class="popup-content">
-        <h2>Verificado</h2>
-        <p id="verificado-text">...</p>
-        <div id="skin-seleccionada"></div>
+        <div id="verificado-text">
+            <h2>Verificando</h2>
+            <div class="spinner"></div>
+            <p>Conectando con el servidor...</p>
+        </div>
+        <div id="skin-seleccionada-popup" style="margin-top: 1rem;"></div>
       </div>
     </div>
   </div>
@@ -212,22 +234,30 @@
             'images/skin12.jpg', 'images/skin13.jpg', 'images/skin14.jpg', 'images/skin15.jpg', 'images/skin16.jpg',
             'images/17.png', 'images/18.png', 'images/19.png', 'images/skin20.jpg'
         ];
+        
         const skinsContainer = document.getElementById('skins');
         skins.forEach((src, index) => {
+            const skinCard = document.createElement('div');
+            skinCard.className = 'skin-card';
+            
             const img = document.createElement('img');
             img.src = src;
             img.alt = `Skin ${index + 1}`;
-            img.onclick = () => seleccionarSkin(src);
-            img.style.animationDelay = `${index * 0.05}s`;
+            
+            skinCard.appendChild(img);
+            skinCard.onclick = () => seleccionarSkin(src);
+            skinCard.style.animationDelay = `${index * 0.05}s`;
+
             if (src.includes('skin20.jpg')) {
-                img.classList.add('skin-exclusiva');
+                skinCard.classList.add('skin-exclusiva');
             }
-            skinsContainer.appendChild(img);
+            
+            skinsContainer.appendChild(skinCard);
         });
 
         const popupID = document.getElementById('popup-id');
         const popupFinal = document.getElementById('popup-final');
-        const skinContenedor = document.getElementById('skin-seleccionada');
+        const skinContenedorPopup = document.getElementById('skin-seleccionada-popup');
         const verificadoText = document.getElementById('verificado-text');
         let skinSeleccionada = '';
 
@@ -235,23 +265,25 @@
             skinSeleccionada = src;
             popupID.classList.add('visible');
         }
+
         window.verificarID = function() {
             const playerId = document.getElementById('player-id').value;
             if (playerId.length < 5) { alert('Por favor ingresa un ID válido'); return; }
+            
             popupID.classList.remove('visible');
             popupFinal.classList.add('visible');
-            verificadoText.innerHTML = `<span class="spinner"></span> Conectando...`;
-            skinContenedor.innerHTML = '';
-            
+            verificadoText.innerHTML = `<h2>Verificando</h2><div class="spinner"></div><p>Conectando con el servidor...</p>`;
+            skinContenedorPopup.innerHTML = '';
+
             setTimeout(() => {
-                skinContenedor.innerHTML = `<img src="${skinSeleccionada}" style="width:120px; height:160px; border-radius:8px; border:3px solid yellow;">`;
                 const audio = new Audio('audio/skin.wav');
                 audio.play().catch(e => console.error("Error al reproducir audio:", e));
-                setTimeout(() => {
-                    verificadoText.innerText = `ID: ${playerId} Tu regalo llegará en 48 horas.`;
-                }, 1000);
-            }, 1500);
+                
+                skinContenedorPopup.innerHTML = `<img src="${skinSeleccionada}" style="width:120px; height:160px; border-radius:8px; border:3px solid var(--primary-color);">`;
+                verificadoText.innerHTML = `<h2>¡Éxito!</h2><p>ID: ${playerId}<br>Tu regalo llegará en 48 horas.</p>`;
+            }, 2500);
         }
+        
         window.cerrarPopupID = () => { popupID.classList.remove('visible'); }
         popupFinal.onclick = () => { popupFinal.classList.remove('visible'); };
     });
