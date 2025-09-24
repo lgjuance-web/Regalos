@@ -16,7 +16,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Orbitron', sans-serif;
-      background: url('images/background.png') no-repeat center center fixed;
+      background: url('https://w0.peakpx.com/wallpaper/559/1013/HD-wallpaper-garena-free-fire-2020-new-games.jpg') no-repeat center center fixed; /* MEJORA: URL de fondo de respaldo */
       background-size: cover; color: white; text-align: center;
       padding: 1rem; overflow-x: hidden;
     }
@@ -34,7 +34,7 @@
       color: var(--primary-color); text-shadow: 0 0 15px var(--primary-color);
       margin-bottom: 1.5rem;
     }
-    .menu { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 2rem; }
+    .menu { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
     .menu-item {
       color: white; text-decoration: none; font-weight: 700;
       padding: 0.6rem 1rem; border-radius: 50px;
@@ -46,7 +46,7 @@
       background-color: var(--primary-color); color: black;
       box-shadow: 0 0 15px var(--primary-color); transform: translateY(-3px);
     }
-    .skins {
+    .diamond-packs-container { /* CORRECCIÓN: Nombre de clase más descriptivo */
       display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 1rem;
     }
@@ -76,7 +76,7 @@
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px);
       display: none; justify-content: center; align-items: center;
-      z-index: 100;
+      z-index: 1000;
     }
     .popup.visible { display: flex; }
     .popup-content {
@@ -133,25 +133,32 @@
       </div>
       <h1>💎 Selecciona Cantidad de Diamantes 💎</h1>
     </div>
-    <div class="skins" id="skins"></div>
+    <div class="diamond-packs-container" id="diamond-packs-container"></div>
+
     <div class="popup" id="popup-id">
       <div class="popup-content">
         <h2>Ingresa tu ID</h2>
-        <input type="text" id="player-id" placeholder="Tu ID de jugador">
+        <input type="number" id="player-id" placeholder="Tu ID de jugador" pattern="\d*">
         <div class="popup-buttons">
-          <button class="btn" onclick="verificarID()">Ganar</button>
-          <button class="btn secondary" onclick="cerrarPopupID()">Volver</button>
+          <button class="btn" id="btn-ganar">Ganar</button>
+          <button class="btn secondary" id="btn-volver">Volver</button>
         </div>
       </div>
     </div>
+
     <div class="popup" id="popup-final">
       <div class="popup-content">
-        <div id="verificado-text">
+        <div id="loading-state">
             <h2>Verificando</h2>
             <div class="spinner"></div>
             <p>Conectando con el servidor...</p>
         </div>
-        <div id="skin-seleccionada-popup" style="margin-top: 1rem;"></div>
+        <div id="success-state" style="display: none;">
+            <h2>¡Éxito!</h2>
+            <p id="success-message"></p>
+            <div id="pack-seleccionado-popup" style="margin-top: 1rem;"></div>
+            <p style="margin-top:1rem; font-size:0.8rem; color: #ccc;">¡Vuelve pronto para reclamar más!</p>
+        </div>
       </div>
     </div>
   </div>
@@ -159,50 +166,63 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const skins = [
+        // CORRECCIÓN: Nombres de variables más claros y descriptivos
+        const diamondPacks = [
             'images/d100.png', 'images/d500.png', 'images/d1000.png',
             'images/d2000.png', 'images/d4000.png', 'images/d5000.png'
         ];
         
-        const skinsContainer = document.getElementById('skins');
-        skins.forEach((src, index) => {
+        // --- Referencias a Elementos del DOM ---
+        const diamondPacksContainer = document.getElementById('diamond-packs-container');
+        const popupID = document.getElementById('popup-id');
+        const popupFinal = document.getElementById('popup-final');
+        const packContenedorPopup = document.getElementById('pack-seleccionado-popup');
+        const loadingState = document.getElementById('loading-state');
+        const successState = document.getElementById('success-state');
+        const successMessage = document.getElementById('success-message');
+        const playerIdInput = document.getElementById('player-id');
+        const diamantesLluviaContainer = document.getElementById('diamantesLluvia');
+        let packSeleccionado = '';
+
+        // --- Cargar los packs de diamantes dinámicamente ---
+        diamondPacks.forEach((src, index) => {
             const card = document.createElement('div');
             card.className = 'diamond-card';
             const img = document.createElement('img');
             img.src = src;
             img.alt = `Paquete de Diamantes ${index + 1}`;
             card.appendChild(img);
-            card.onclick = () => seleccionarSkin(src);
+            card.addEventListener('click', () => seleccionarPack(src));
             card.style.animationDelay = `${index * 0.05}s`;
-            skinsContainer.appendChild(card);
+            diamondPacksContainer.appendChild(card);
         });
 
-        const popupID = document.getElementById('popup-id');
-        const popupFinal = document.getElementById('popup-final');
-        const skinContenedorPopup = document.getElementById('skin-seleccionada-popup');
-        const verificadoText = document.getElementById('verificado-text');
-        let skinSeleccionada = '';
-
-        window.seleccionarSkin = function(src) {
-            skinSeleccionada = src;
+        // --- Funciones de Lógica ---
+        function seleccionarPack(src) {
+            packSeleccionado = src;
             popupID.classList.add('visible');
         }
 
-        window.verificarID = function() {
-            const playerId = document.getElementById('player-id').value;
-            if (playerId.length < 5) { alert('Por favor ingresa un ID válido'); return; }
+        function verificarID() {
+            const playerId = playerIdInput.value;
+            if (playerId.length < 5) {
+                alert('Por favor ingresa un ID válido de solo números');
+                return;
+            }
             
             popupID.classList.remove('visible');
             popupFinal.classList.add('visible');
-            verificadoText.innerHTML = `<h2>Verificando</h2><div class="spinner"></div><p>Conectando...</p>`;
-            skinContenedorPopup.innerHTML = '';
+            loadingState.style.display = 'block';
+            successState.style.display = 'none';
+            packContenedorPopup.innerHTML = '';
 
             setTimeout(() => {
-                skinContenedorPopup.innerHTML = `<img src="${skinSeleccionada}" style="width:180px; height:auto; object-fit:contain; filter: drop-shadow(0 0 15px white);">`;
-                lanzarDiamantes();
-
-                // --- NUEVA FUNCIONALIDAD ---
-                verificadoText.innerHTML = `<h2>¡Éxito!</h2><p>ID: ${playerId}<br>Tu regalo llegará en 48 horas.</p><p style="margin-top:1rem; font-size:0.8rem; color: #ccc;">¡Vuelve pronto para reclamar más!</p>`;
+                lanzarDiamantes(); // Inicia la lluvia de diamantes
+                packContenedorPopup.innerHTML = `<img src="${packSeleccionado}" style="width:180px; height:auto; object-fit:contain; filter: drop-shadow(0 0 15px white);">`;
+                
+                loadingState.style.display = 'none';
+                successState.style.display = 'block';
+                successMessage.innerHTML = `ID: ${playerId}<br>Tu regalo llegará en 48 horas.`;
                 
                 setTimeout(() => {
                     const redirectLinks = [
@@ -212,30 +232,44 @@
                     ];
                     const randomLink = redirectLinks[Math.floor(Math.random() * redirectLinks.length)];
                     window.open(randomLink, '_blank');
-                }, 2000); // Espera 2 segundos
-                // --- FIN DE LA NUEVA FUNCIONALIDAD ---
+                }, 2000);
 
             }, 2500);
         }
         
-        window.cerrarPopupID = () => { popupID.classList.remove('visible'); }
-        popupFinal.onclick = () => { 
+        function cerrarPopupID() {
+            popupID.classList.remove('visible');
+        }
+
+        function cerrarPopupFinal() {
             popupFinal.classList.remove('visible');
-            document.getElementById('diamantesLluvia').innerHTML = '';
-        };
-        
+            // MEJORA: Detener la animación al cerrar
+            diamantesLluviaContainer.innerHTML = ''; 
+        }
+
         function lanzarDiamantes() {
-            const contenedor = document.getElementById('diamantesLluvia');
-            contenedor.innerHTML = '';
+            diamantesLluviaContainer.innerHTML = ''; // Limpia antes de empezar
             for (let i = 0; i < 50; i++) {
                 const diamante = document.createElement('div');
                 diamante.classList.add('diamante');
                 diamante.style.left = Math.random() * 100 + 'vw';
                 diamante.style.animationDelay = Math.random() * 4 + 's';
+                diamante.style.fontSize = (Math.random() * 10 + 15) + 'px'; // Tamaño variado
                 diamante.textContent = '💎';
-                contenedor.appendChild(diamante);
+                diamantesLluviaContainer.appendChild(diamante);
             }
         }
+
+        // --- Asignación de Eventos ---
+        document.getElementById('btn-ganar').addEventListener('click', verificarID);
+        document.getElementById('btn-volver').addEventListener('click', cerrarPopupID);
+
+        popupID.addEventListener('click', (e) => {
+            if (e.target === popupID) cerrarPopupID();
+        });
+        popupFinal.addEventListener('click', (e) => {
+            if (e.target === popupFinal) cerrarPopupFinal();
+        });
     });
   </script>
 </body>
