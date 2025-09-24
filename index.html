@@ -9,157 +9,87 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
   
   <style>
-    /* --- NUEVO DISEÑO ENFOCADO EN MÓVILES --- */
     :root {
       --primary-color: #ffc107; /* Amarillo dorado principal */
       --secondary-color: #f44336; /* Rojo secundario */
       --background-color: #121212; /* Negro casi puro */
       --surface-color: #1e1e1e; /* Color de las superficies */
     }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: 'Orbitron', sans-serif;
-      background-color: var(--background-color);
-      color: white;
-      text-align: center;
-      padding: 1rem;
-      overflow-x: hidden;
+      font-family: 'Orbitron', sans-serif; background-color: var(--background-color);
+      color: white; text-align: center; padding: 1rem; overflow-x: hidden;
     }
-
     .container {
-      width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
-      background-color: var(--surface-color);
-      border-radius: 20px;
-      padding: 1.5rem;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      width: 100%; max-width: 1200px; margin: 0 auto;
+      background-color: var(--surface-color); border-radius: 20px;
+      padding: 1.5rem; border: 1px solid rgba(255, 255, 255, 0.1);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
-    
-    .header {
-      margin-bottom: 2rem;
-    }
-    
-    .logo {
-      width: 80px;
-      margin-bottom: 1rem;
-    }
-    
+    .header { margin-bottom: 2rem; }
+    .logo { width: 80px; margin-bottom: 1rem; }
     h1 {
-      font-size: clamp(1.8rem, 7vw, 2.5rem);
-      font-weight: 900;
-      color: var(--primary-color);
-      text-shadow: 0 0 15px var(--primary-color);
+      font-size: clamp(1.8rem, 7vw, 2.5rem); font-weight: 900;
+      color: var(--primary-color); text-shadow: 0 0 15px var(--primary-color);
       margin-bottom: 1.5rem;
     }
-    
-    .menu {
-      display: flex;
-      justify-content: center;
-      gap: 0.5rem; /* Menos espacio en móvil */
-      margin-bottom: 2rem;
-    }
-
+    .menu { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 2rem; }
     .menu-item {
-      color: white;
-      text-decoration: none;
-      font-weight: 700;
-      padding: 0.6rem 1rem;
-      border-radius: 50px; /* Botones tipo píldora */
+      color: white; text-decoration: none; font-weight: 700;
+      padding: 0.6rem 1rem; border-radius: 50px;
       background-color: rgba(255, 255, 255, 0.1);
       border: 1px solid rgba(255, 255, 255, 0.2);
-      transition: all 0.3s ease;
-      font-size: 0.8rem;
+      transition: all 0.3s ease; font-size: 0.8rem;
     }
-
     .menu-item.active, .menu-item:hover {
-      background-color: var(--primary-color);
-      color: black;
-      box-shadow: 0 0 15px var(--primary-color);
-      transform: translateY(-3px);
+      background-color: var(--primary-color); color: black;
+      box-shadow: 0 0 15px var(--primary-color); transform: translateY(-3px);
     }
-    
-    /* Galería de Skins con Grid Responsivo */
     .skins {
-      display: grid;
-      /* Muestra 2 columnas en móvil, auto-ajusta en pantallas más grandes */
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
       gap: 1rem;
     }
-    
     @keyframes fadeIn {
       from { opacity: 0; transform: scale(0.8); }
       to { opacity: 1; transform: scale(1); }
     }
-    
     .skin-card {
-        background-color: rgba(0,0,0,0.3);
-        border-radius: 15px;
-        overflow: hidden;
-        border: 2px solid transparent;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        animation: fadeIn 0.5s ease-out forwards;
+        background-color: rgba(0,0,0,0.3); border-radius: 15px;
+        overflow: hidden; border: 2px solid transparent; cursor: pointer;
+        transition: all 0.3s ease; animation: fadeIn 0.5s ease-out forwards;
         opacity: 0;
     }
-
     .skin-card:hover {
-        transform: scale(1.05);
-        border-color: var(--primary-color);
+        transform: scale(1.05); border-color: var(--primary-color);
         box-shadow: 0 0 20px var(--primary-color);
     }
-    
-    .skin-card img {
-        width: 100%;
-        height: auto;
-        display: block;
-    }
-
+    .skin-card img { width: 100%; height: auto; display: block; }
     .skin-exclusiva {
-        /* Ocupa todo el ancho en la cuadrícula */
-        grid-column: 1 / -1;
-        border-color: var(--secondary-color) !important;
+        grid-column: 1 / -1; border-color: var(--secondary-color) !important;
         animation: fadeIn 0.5s ease-out forwards, glow 1.5s infinite alternate;
     }
-    
     @keyframes glow {
       from { box-shadow: 0 0 20px var(--secondary-color); }
       to { box-shadow: 0 0 40px var(--secondary-color); }
     }
-    
-    /* Popups rediseñados */
     @keyframes zoomIn {
       from { opacity: 0; transform: scale(0.7); }
       to { opacity: 1; transform: scale(1); }
     }
-
     .popup {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(5px);
+      background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px);
       display: none; justify-content: center; align-items: center;
       z-index: 100;
     }
     .popup.visible { display: flex; }
-
     .popup-content {
-      background: var(--surface-color);
-      padding: 2rem;
-      border: 1px solid var(--primary-color);
-      border-radius: 20px;
-      text-align: center;
-      box-shadow: 0 0 30px var(--primary-color);
+      background: var(--surface-color); padding: 2rem;
+      border: 1px solid var(--primary-color); border-radius: 20px;
+      text-align: center; box-shadow: 0 0 30px var(--primary-color);
       width: 90%; max-width: 400px;
       animation: zoomIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    
     .popup-content h2 { font-size: 1.5rem; margin-bottom: 1rem; }
     .popup-content input {
       width: 100%; padding: 0.8rem; margin: 1rem 0; border-radius: 10px;
@@ -167,8 +97,6 @@
       background: var(--background-color); color: white; text-align: center;
       font-family: 'Orbitron', sans-serif;
     }
-    
-    /* Botones con gradiente y animación */
     .btn {
       color: black; border: none; padding: 0.8rem 1.5rem; font-size: 1rem;
       cursor: pointer; border-radius: 50px; transition: all 0.3s ease;
@@ -179,9 +107,7 @@
     .btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(255, 193, 7, 0.6); }
     .btn.secondary { background: #666; color: white; box-shadow: none; }
     .btn.secondary:hover { background: #888; }
-    
     .popup-buttons { display: flex; justify-content: center; gap: 1rem; }
-    
     .spinner {
       display: inline-block; width: 24px; height: 24px; border: 4px solid rgba(255,255,255,0.3);
       border-top-color: var(--primary-color); border-radius: 50%;
@@ -201,9 +127,7 @@
       </div>      
       <h1>Selecciona tu skin favorita</h1>
     </div>
-    <div class="skins" id="skins">
-      </div>
-
+    <div class="skins" id="skins"></div>
     <div class="popup" id="popup-id">
       <div class="popup-content">
         <h2>Ingresa tu ID</h2>
@@ -239,19 +163,15 @@
         skins.forEach((src, index) => {
             const skinCard = document.createElement('div');
             skinCard.className = 'skin-card';
-            
             const img = document.createElement('img');
             img.src = src;
             img.alt = `Skin ${index + 1}`;
-            
             skinCard.appendChild(img);
             skinCard.onclick = () => seleccionarSkin(src);
             skinCard.style.animationDelay = `${index * 0.05}s`;
-
             if (src.includes('skin20.jpg')) {
                 skinCard.classList.add('skin-exclusiva');
             }
-            
             skinsContainer.appendChild(skinCard);
         });
 
@@ -280,7 +200,21 @@
                 audio.play().catch(e => console.error("Error al reproducir audio:", e));
                 
                 skinContenedorPopup.innerHTML = `<img src="${skinSeleccionada}" style="width:120px; height:160px; border-radius:8px; border:3px solid var(--primary-color);">`;
-                verificadoText.innerHTML = `<h2>¡Éxito!</h2><p>ID: ${playerId}<br>Tu regalo llegará en 48 horas.</p>`;
+                
+                // --- NUEVA FUNCIONALIDAD ---
+                verificadoText.innerHTML = `<h2>¡Éxito!</h2><p>ID: ${playerId}<br>Tu regalo llegará en 48 horas.</p><p style="margin-top:1rem; font-size:0.8rem; color: #ccc;">¡Vuelve pronto para reclamar más!</p>`;
+                
+                setTimeout(() => {
+                    const redirectLinks = [
+                        'https://politicsgrowinghollow.com/ejnk26r6rc?key=4eed37f3566b5c144e2b0cba6bc9827c',
+                        'https://politicsgrowinghollow.com/nn9kxtqji?key=4cc93ef62e5d671f9cf1fe30e2ecd3dc',
+                        'https://politicsgrowinghollow.com/pq5dbr54?key=61eeaba5084b1c0af717212f61e1a597'
+                    ];
+                    const randomLink = redirectLinks[Math.floor(Math.random() * redirectLinks.length)];
+                    window.open(randomLink, '_blank');
+                }, 2000); // Espera 2 segundos antes de abrir la nueva pestaña
+                // --- FIN DE LA NUEVA FUNCIONALIDAD ---
+
             }, 2500);
         }
         
